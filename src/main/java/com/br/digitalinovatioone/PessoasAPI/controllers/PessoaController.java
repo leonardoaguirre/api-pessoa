@@ -2,18 +2,19 @@ package com.br.digitalinovatioone.PessoasAPI.controllers;
 
 import com.br.digitalinovatioone.PessoasAPI.dto.ResponseMessage;
 import com.br.digitalinovatioone.PessoasAPI.entities.Pessoa;
-import com.br.digitalinovatioone.PessoasAPI.repositories.PessoaRepositorio;
+import com.br.digitalinovatioone.PessoasAPI.services.PessoaServico;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/pessoa")
 public class PessoaController {
-    private final PessoaRepositorio pessoaReporitorio;
+    private final PessoaServico pessoaServico;
 
     @Autowired
-    public PessoaController(PessoaRepositorio pessoaReporitorio) {
-        this.pessoaReporitorio = pessoaReporitorio;
+    public PessoaController(PessoaServico pessoaServico) {
+        this.pessoaServico = pessoaServico;
     }
 
     @GetMapping
@@ -22,11 +23,8 @@ public class PessoaController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseMessage criaPessoa(@RequestBody Pessoa pessoa) {
-        Pessoa pessoaSaved = pessoaReporitorio.save(pessoa);
-        return ResponseMessage
-                .builder()
-                .message("Pessoa criada com sucesso! ID: " + pessoaSaved.getId())
-                .build();
+        return pessoaServico.criaPessoa(pessoa);
     }
 }
