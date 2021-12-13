@@ -3,6 +3,7 @@ package com.br.digitalinovatioone.PessoasAPI.services;
 import com.br.digitalinovatioone.PessoasAPI.dto.ResponseMessage;
 import com.br.digitalinovatioone.PessoasAPI.dto.request.PessoaDTO;
 import com.br.digitalinovatioone.PessoasAPI.entities.Pessoa;
+import com.br.digitalinovatioone.PessoasAPI.exceptions.PessoaNotFoundException;
 import com.br.digitalinovatioone.PessoasAPI.mapper.PessoaMapper;
 import com.br.digitalinovatioone.PessoasAPI.repositories.PessoaRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,5 +40,12 @@ public class PessoaServico {
                 .map(pessoaMaper::toDTO)
                 .collect(Collectors.toList());
 
+    }
+
+    public PessoaDTO procuraPorId(long id) throws PessoaNotFoundException {
+        Pessoa pessoa = pessoaRepositorio.findById(id)
+                .orElseThrow(()-> new PessoaNotFoundException(id));
+
+        return pessoaMaper.toDTO(pessoa);
     }
 }

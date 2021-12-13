@@ -3,6 +3,7 @@ package com.br.digitalinovatioone.PessoasAPI.controllers;
 import com.br.digitalinovatioone.PessoasAPI.dto.ResponseMessage;
 import com.br.digitalinovatioone.PessoasAPI.dto.request.PessoaDTO;
 import com.br.digitalinovatioone.PessoasAPI.entities.Pessoa;
+import com.br.digitalinovatioone.PessoasAPI.exceptions.PessoaNotFoundException;
 import com.br.digitalinovatioone.PessoasAPI.services.PessoaServico;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,5 +31,10 @@ public class PessoaController {
     @GetMapping
     public List<PessoaDTO> listarPessoas(){
         return pessoaServico.listar();
+    }
+
+    @GetMapping("/{id}")
+    public PessoaDTO procuraPorId(@PathVariable long id) throws PessoaNotFoundException {
+        return pessoaServico.procuraPorId(id);
     }
 }
