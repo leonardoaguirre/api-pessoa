@@ -19,7 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 public class PessoaDTO {
 
-    private long id;
+    private Long id;
 
     @NotEmpty
     @Size(min = 3, max = 50)
@@ -35,7 +35,7 @@ public class PessoaDTO {
 
     private String aniversario;
 
-    @Valid
     @NotEmpty
-    private List<Telefone> telefones;
+    @Valid
+    private List<TelefoneDTO> telefones;
 }

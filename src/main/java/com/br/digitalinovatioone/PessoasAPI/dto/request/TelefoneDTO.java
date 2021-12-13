@@ -15,7 +15,8 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TelefoneDTO {
-    private long id;
+
+    private Long id;
 
     @Enumerated(EnumType.STRING)
     private TipoTelefone tipoTelefone;
