@@ -1,37 +1,31 @@
 package com.br.digitalinovatioone.PessoasAPI.services;
 
-import com.br.digitalinovatioone.PessoasAPI.dto.ResponseMessage;
 import com.br.digitalinovatioone.PessoasAPI.dto.request.PessoaDTO;
+import com.br.digitalinovatioone.PessoasAPI.dto.response.ResponseMessage;
 import com.br.digitalinovatioone.PessoasAPI.entities.Pessoa;
 import com.br.digitalinovatioone.PessoasAPI.exceptions.PessoaNotFoundException;
 import com.br.digitalinovatioone.PessoasAPI.mapper.PessoaMapper;
 import com.br.digitalinovatioone.PessoasAPI.repositories.PessoaRepositorio;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 public class PessoaServico {
     private final PessoaRepositorio pessoaRepositorio;
 
     private final PessoaMapper pessoaMaper = PessoaMapper.INSTANCE;
 
-    @Autowired
-    public PessoaServico(PessoaRepositorio pessoaRepositorio) {
-        this.pessoaRepositorio = pessoaRepositorio;
-    }
-    public ResponseMessage criaPessoa( PessoaDTO pessoaDTO) {
-        Pessoa pessoa_a_salvar= pessoaMaper.toModel(pessoaDTO);
+
+    public ResponseMessage criaPessoa(PessoaDTO pessoaDTO) {
+        Pessoa pessoa_a_salvar = pessoaMaper.toModel(pessoaDTO);
 
         Pessoa pessoaSalva = pessoaRepositorio.save(pessoa_a_salvar);
-        return ResponseMessage
-                .builder()
-                .message("Pessoa criada com sucesso! ID: " + pessoaSalva.getId())
-                .build();
+        return getResponseMessage(pessoaSalva, "Pessoa salva com sucesso! id: ");
     }
 
     public List<PessoaDTO> listar() {
@@ -40,10 +34,6 @@ public class PessoaServico {
                 .map(pessoaMaper::toDTO)
                 .collect(Collectors.toList());
 
-    }
-    private Pessoa verificaSeExiste(long id) throws PessoaNotFoundException {
-        return pessoaRepositorio.findById(id)
-                .orElseThrow(()-> new PessoaNotFoundException(id));
     }
 
     public PessoaDTO procuraPorId(long id) throws PessoaNotFoundException {
@@ -57,4 +47,24 @@ public class PessoaServico {
         pessoaRepositorio.delete(pessoa);
     }
 
+    public ResponseMessage alteraPorId(long id, PessoaDTO pessoaDTO) throws PessoaNotFoundException {
+        verificaSeExiste(id);
+
+        Pessoa pessoa_a_alterar = pessoaMaper.toModel(pessoaDTO);
+
+        Pessoa pessoaAlterada = pessoaRepositorio.save(pessoa_a_alterar);
+        return getResponseMessage(pessoaAlterada, "Pessoa alterada com sucesso! Id: ");
+    }
+
+    private ResponseMessage getResponseMessage(Pessoa pessoaSalva, String message) {
+        return ResponseMessage
+                .builder()
+                .message(message + pessoaSalva.getId())
+                .build();
+    }
+
+    private Pessoa verificaSeExiste(long id) throws PessoaNotFoundException {
+        return pessoaRepositorio.findById(id)
+                .orElseThrow(() -> new PessoaNotFoundException(id));
+    }
 }
