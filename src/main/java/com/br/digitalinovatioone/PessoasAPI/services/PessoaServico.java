@@ -41,11 +41,20 @@ public class PessoaServico {
                 .collect(Collectors.toList());
 
     }
+    private Pessoa verificaSeExiste(long id) throws PessoaNotFoundException {
+        return pessoaRepositorio.findById(id)
+                .orElseThrow(()-> new PessoaNotFoundException(id));
+    }
 
     public PessoaDTO procuraPorId(long id) throws PessoaNotFoundException {
-        Pessoa pessoa = pessoaRepositorio.findById(id)
-                .orElseThrow(()-> new PessoaNotFoundException(id));
+        Pessoa pessoa = verificaSeExiste(id);
 
         return pessoaMaper.toDTO(pessoa);
     }
+
+    public void deletar(long id) throws PessoaNotFoundException {
+        Pessoa pessoa = verificaSeExiste(id);
+        pessoaRepositorio.delete(pessoa);
+    }
+
 }
