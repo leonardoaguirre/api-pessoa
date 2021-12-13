@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/pessoa")
@@ -20,14 +21,14 @@ public class PessoaController {
         this.pessoaServico = pessoaServico;
     }
 
-    @GetMapping
-    public String getPessoa() {
-        return "Olá esta é minha api";
-    }
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseMessage criaPessoa(@RequestBody @Valid PessoaDTO pessoaDTO) {
         return pessoaServico.criaPessoa(pessoaDTO);
+    }
+
+    @GetMapping
+    public List<PessoaDTO> listarPessoas(){
+        return pessoaServico.listar();
     }
 }
