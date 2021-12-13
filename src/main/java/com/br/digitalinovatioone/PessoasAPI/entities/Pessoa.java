@@ -29,7 +29,7 @@ public class Pessoa {
     @Column(nullable = false, unique = true)
     private String cpf;
 
-    private LocalDate diaAniversario;
+    private LocalDate aniversario;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REMOVE})
     private List<Telefone> telefones;
